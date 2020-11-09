@@ -1,0 +1,98 @@
+﻿@model PagedList.IPagedList<ClassLibrary1.EF.TAIKHOAN>
+@using PagedList.Mvc 
+
+
+@{
+    ViewBag.Title = "Quản lí người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section header{
+    Dang sách người dùng
+    }
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Danh sách người dùng
+            </div>
+
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                @using (Html.BeginForm("Index", "User", FormMethod.Get))
+                {
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class=" col-md-4">
+                                <input type="text" value="@ViewBag.SearchString" name="searchString" />
+                            </div>
+                            <div class=" col-md-4">
+                                <button type="submit">Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @*@using (Html.BeginForm("Index", "User", FormMethod.Get))
+                {
+                    <div class="row form-group">
+                        <div class="col-lg-12">
+                            <div class="col-md-4">
+                                <input type="text" value="@ViewBag.SearchString" class="form-control" name="searchString" />
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-success">Tìm kiếm</button>
+                                <a class="btn btn-primary" href="/Admin/User/Create">Thêm mới</a>
+                            </div>
+                        </div>
+                    </div>
+                }*@
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+
+                                <th>Tài khoản</th>
+                                <th>Tên</th>
+                                <th>Email</th>
+                                <th>Trạng thái</th>
+                                <th>#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr id="row_@item.ID">
+                                    <td>
+                                        <a href="/Admin/User/Edit/@item.ID">Sửa </a>
+                                        |
+                                        @Ajax.ActionLink("Xóa", "Delete", new { @id = item.ID }, new AjaxOptions
+                                   {
+                                       Confirm = "Bạn có muốn xóa bản ghi này ?",
+                                       OnComplete = "$('#row_" + @item.ID + "').remove()",
+                                       HttpMethod = "Delete "
+                                   })
+                                    </td>
+
+                                    <td>@item.UserName</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Email</td>
+
+                                    <td>
+                                    </td>
+                                </tr>
+                            }
+
+
+                        </tbody>
+                    </table>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page,@searchString = ViewBag.SearchString }))
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+</div>
+
